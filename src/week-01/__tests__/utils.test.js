@@ -1,35 +1,33 @@
-import { convert, getMonthlyRev, getWeeklyRev, getYearlyRev } from '../utils';
+import { getRevenue } from '../utils';
 
-describe('Helpers', () => {
-  it('converts data to the right shape', () => {
-    const data = [15, 10, 40];
-    const price = 5;
-    const expected = [
-      { day: 0, total: 15 * price },
-      { day: 1, total: 10 * price },
-      { day: 2, total: 40 * price },
-    ];
-    expect(convert(data, price)).toEqual(expected);
-  });
+const today = new Date('2019-09-16T03:23:08.066Z');
 
+describe('getRevenue', () => {
   it('calculates weekly total', () => {
     const data = [1, 3, 5, 6, 4, 2, 8, 7, 11, 4, 3, 3, 1, 4, 5];
     const price = 5;
-    const expected = [31 * price, 35 * price, 1 * price];
-    expect(getWeeklyRev(data, price)).toEqual(expected);
+    const expectedWeek = [31 * price, 35 * price, 1 * price];
+    const expectedMonthYear = [67 * price];
+    const { week, month, year } = getRevenue(data, price, today);
+    expect(week).toEqual(expectedWeek);
+    expect(month).toEqual(expectedMonthYear);
+    expect(year).toEqual(expectedMonthYear);
   });
 
   it('calculates monthly total', () => {
     const data = [...Array(65).keys()].map(k => k + 1);
     const price = 5;
-    const expected = [7575, 3075, 75];
-    expect(getMonthlyRev(data, price)).toEqual(expected);
+    const expectedMonth = [4350, 5425, 950];
+    const expectedYear = [expectedMonth.reduce((a, c) => a + c, 0)];
+    const { month, year } = getRevenue(data, price, today);
+    expect(month).toEqual(expectedMonth);
+    expect(year).toEqual(expectedYear);
   });
 
   it('calculates yearly total', () => {
     const data = [...Array(1000).keys()].map(k => k + 1);
     const price = 6;
-    const expected = [1791420, 992070, 219510];
-    expect(getYearlyRev(data, price)).toEqual(expected);
+    const expected = [1349082, 1226400, 427050, 468];
+    expect(getRevenue(data, price, today).year).toEqual(expected);
   });
 });

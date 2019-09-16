@@ -1,21 +1,50 @@
-export const convert = (data, price = 1) => data.map((ea, i) => ({ day: i, total: ea * price }));
-export const getRevenueInTime = (dailyCookies, price = 1, daysInTimeUnit = 7) => {
-  let currentTimeUnit = 0;
-  return dailyCookies.reduceRight(
-    (weeklyRev, dailyCookies) => {
-      if (currentTimeUnit > daysInTimeUnit - 1) {
-        weeklyRev.push(0);
-        currentTimeUnit = 0;
-      }
-      weeklyRev[weeklyRev.length - 1] += dailyCookies * price;
-      currentTimeUnit++;
+import PropTypes from 'prop-types';
+import { isLastDayOfMonth, subDays } from 'date-fns';
 
-      return weeklyRev;
+export const BASIC_PRICE = 5;
+export const DELUXE_PRICE = 6;
+
+export const titleCase = str => str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
+
+// Creates arrays for weekly, monthly, yearly revenue.
+// Most recent revenue is at the beginning of the array.
+export const getRevenue = (rawCupcakeData, price = 1, today = new Date()) => {
+  let weekCount = 0;
+  let currDay = today;
+
+  return rawCupcakeData.reduceRight(
+    (acc, dailyCupcakes) => {
+      // Week totals (rolling full week starting with today)
+      if (weekCount > 6) {
+        acc.week.push(0);
+        weekCount = 0;
+      }
+      acc.week[acc.week.length - 1] += dailyCupcakes * price;
+      weekCount++;
+
+      // Month and year totals, starts at current day of the month
+      if (isLastDayOfMonth(currDay)) {
+        acc.month.push(0);
+        if (currDay.getMonth() === 11) {
+          acc.year.push(0);
+        }
+      }
+      acc.month[acc.month.length - 1] += dailyCupcakes * price;
+      acc.year[acc.year.length - 1] += dailyCupcakes * price;
+
+      currDay = subDays(currDay, 1);
+      return acc;
     },
-    [0]
+    {
+      week: [0],
+      month: [0],
+      year: [0],
+    }
   );
 };
 
-export const getWeeklyRev = (dailyCookies, price) => getRevenueInTime(dailyCookies, price, 7);
-export const getMonthlyRev = (dailyCookies, price) => getRevenueInTime(dailyCookies, price, 30);
-export const getYearlyRev = (dailyCookies, price) => getRevenueInTime(dailyCookies, price, 365);
+export const dataShape = {
+  basic: PropTypes.arrayOf(PropTypes.number).isRequired,
+  deluxe: PropTypes.arrayOf(PropTypes.number).isRequired,
+  total: PropTypes.arrayOf(PropTypes.number).isRequired,
+};
