@@ -41,13 +41,17 @@ p {
   text-align: left;
 }
 
-.App-stats--block {
-  /* text-align: left; */
+.App-stats--container {
+  border-bottom: 2px dashed lightgreen;
 }
 
-.App-stats--block > h2 {
-  border-bottom: 2px dashed lightgreen;
-  margin-top: 0;
+.App-stats--container h2 {
+  display: inline;
+}
+
+.App-stats--cost {
+  color: lightseagreen;
+  display: inline;
 }
 
 .text {

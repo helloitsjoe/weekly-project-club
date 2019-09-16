@@ -15,21 +15,21 @@ describe('Helpers', () => {
   it('calculates weekly total', () => {
     const data = [1, 3, 5, 6, 4, 2, 8, 7, 11, 4, 3, 3, 1, 4, 5];
     const price = 5;
-    const expected = [1 * price, 35 * price, 31 * price];
+    const expected = [31 * price, 35 * price, 1 * price];
     expect(getWeeklyRev(data, price)).toEqual(expected);
   });
 
   it('calculates monthly total', () => {
     const data = [...Array(65).keys()].map(k => k + 1);
     const price = 5;
-    const expected = [75, 3075, 7575];
+    const expected = [7575, 3075, 75];
     expect(getMonthlyRev(data, price)).toEqual(expected);
   });
 
   it('calculates yearly total', () => {
     const data = [...Array(1000).keys()].map(k => k + 1);
     const price = 6;
-    const expected = [219510, 992070, 1791420];
+    const expected = [1791420, 992070, 219510];
     expect(getYearlyRev(data, price)).toEqual(expected);
   });
 });

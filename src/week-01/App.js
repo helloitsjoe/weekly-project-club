@@ -1,12 +1,6 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import './App.css';
-import {
-  VictoryChart,
-  VictoryLine,
-  VictoryAxis,
-  VictoryTooltip,
-  VictoryVoronoiContainer,
-} from 'victory';
+import { VictoryChart, VictoryLine, VictoryAxis } from 'victory';
 import { convert, getWeeklyRev, getRevenueInTime } from './utils';
 
 import basicRaw from './resources/basic.json';
@@ -23,7 +17,7 @@ const unitMap = {
   [YEAR]: 'Year',
 };
 
-const Chart = ({ data }) => {
+const Chart = ({ data, days }) => {
   const { basic, deluxe, total } = data;
   const maxDomain = Math.max(...total) * 1.1;
 
@@ -35,8 +29,11 @@ const Chart = ({ data }) => {
   });
 
   return (
-    <VictoryChart domain={{ y: [0, maxDomain] }} padding={{ left: 60, right: 50, bottom: 50 }}>
-      <VictoryAxis label="Day" />
+    <VictoryChart
+      domain={{ y: [0, maxDomain] }}
+      padding={{ left: 60, right: 50, bottom: 50, top: 20 }}
+    >
+      <VictoryAxis invertAxis label={`${unitMap[days]}s in the past`} />
       <VictoryAxis
         dependentAxis
         tickFormat={ea => (ea > 1000 ? `${ea / 1000}k` : ea)}
@@ -50,11 +47,19 @@ const Chart = ({ data }) => {
   );
 };
 
-const StatsBlock = ({ num, label }) => {
+const StatsBlock = ({ num, cost, label }) => {
   return (
     <div className="App-stats--block">
       <p>{label}:</p>
-      <h2>{num}</h2>
+      <div className="App-stats--container">
+        {cost ? (
+          <div>
+            <h2>{num}</h2> <h4 className="App-stats--cost">$({num * cost})</h4>
+          </div>
+        ) : (
+          <h2>${num}</h2>
+        )}
+      </div>
     </div>
   );
 };
@@ -77,14 +82,22 @@ const Stats = ({ data, days }) => {
       <div className="App-stats">
         <section>
           <h3>{seeAvg ? `${unit}ly Average` : `Last ${unit}`}</h3>
-          <StatsBlock num={Math.round(getComparison(basic) / 5)} label={'Basic cupcakes'} />
-          <StatsBlock num={Math.round(getComparison(deluxe) / 6)} label={'Deluxe cupcakes'} />
+          <StatsBlock
+            num={Math.round(getComparison(basic) / 5)}
+            cost={5}
+            label={'Basic cupcakes'}
+          />
+          <StatsBlock
+            num={Math.round(getComparison(deluxe) / 6)}
+            cost={6}
+            label={'Deluxe cupcakes'}
+          />
           <StatsBlock num={getComparison(total)} label={'Total revenue'} />
         </section>
         <section>
           <h3>This {unitMap[days]}</h3>
-          <StatsBlock num={Math.round(getCurrent(basic)) / 5} label={'Basic cupcakes'} />
-          <StatsBlock num={Math.round(getCurrent(deluxe)) / 6} label={'Deluxe cupcakes'} />
+          <StatsBlock num={Math.round(getCurrent(basic)) / 5} cost={5} label={'Basic cupcakes'} />
+          <StatsBlock num={Math.round(getCurrent(deluxe)) / 6} cost={6} label={'Deluxe cupcakes'} />
           <StatsBlock num={getCurrent(total)} label={'Total revenue'} />
         </section>
       </div>
@@ -129,7 +142,7 @@ function App() {
           {showChart ? 'See stats' : 'See chart'}
         </button>
         <div className="App-chart">
-          {showChart ? <Chart data={data} /> : <Stats data={data} days={days} />}
+          {showChart ? <Chart data={data} days={days} /> : <Stats data={data} days={days} />}
         </div>
       </div>
     </div>
