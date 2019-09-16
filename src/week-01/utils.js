@@ -9,18 +9,16 @@ export const titleCase = str => str.slice(0, 1).toUpperCase() + str.slice(1).toL
 // Creates arrays for weekly, monthly, yearly revenue.
 // Most recent revenue is at the beginning of the array.
 export const getRevenue = (rawCupcakeData, price = 1, today = new Date()) => {
-  let weekCount = 0;
+  let dayOfWeek = 0;
   let currDay = today;
 
   return rawCupcakeData.reduceRight(
     (acc, dailyCupcakes) => {
       // Week totals (rolling full week starting with today)
-      if (weekCount > 6) {
+      if (dayOfWeek > 6) {
         acc.week.push(0);
-        weekCount = 0;
+        dayOfWeek = 0;
       }
-      acc.week[acc.week.length - 1] += dailyCupcakes * price;
-      weekCount++;
 
       // Month and year totals, starts at current day of the month
       if (isLastDayOfMonth(currDay)) {
@@ -29,9 +27,11 @@ export const getRevenue = (rawCupcakeData, price = 1, today = new Date()) => {
           acc.year.push(0);
         }
       }
+      acc.week[acc.week.length - 1] += dailyCupcakes * price;
       acc.month[acc.month.length - 1] += dailyCupcakes * price;
       acc.year[acc.year.length - 1] += dailyCupcakes * price;
 
+      dayOfWeek++;
       currDay = subDays(currDay, 1);
       return acc;
     },
