@@ -1,5 +1,5 @@
 body {
-  font-family: 'Quicksand';
+  font-family: 'Quicksand', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   background-color: #eee;
   color: darkmagenta;
 }
@@ -11,21 +11,16 @@ h1 {
   border-bottom: 2px dashed lightblue;
 }
 
-p {
-  margin-bottom: 4px;
-}
-
 .App {
   display: flex;
   text-align: center;
   justify-content: center;
 }
 
-.App-header {
+.App-container {
   width: 400px;
   margin-top: 50px;
   padding: 0 50px 20px;
-  /* border-radius: 10px; */
   border: 4px solid lightblue;
   box-shadow: 0 5px 10px -5px;
   background-color: #fff;
@@ -35,6 +30,10 @@ p {
   display: flex;
   justify-content: space-between;
   text-align: left;
+}
+
+.App-stats--block p {
+  margin-bottom: 4px;
 }
 
 .App-stats--container {
@@ -50,7 +49,7 @@ p {
   display: inline;
 }
 
-.text {
+button.text {
   outline: 0;
   border: 0;
   text-decoration: underline;
@@ -58,7 +57,7 @@ p {
   margin-top: 20px;
 }
 
-.text:focus {
+button.text:focus {
   outline: 4px solid lightblue;
 }
 
