@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import './App.css';
 import { VictoryChart, VictoryLine, VictoryAxis } from 'victory';
 import { convert, getWeeklyRev, getRevenueInTime } from './utils';
