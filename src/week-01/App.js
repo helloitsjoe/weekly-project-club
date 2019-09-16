@@ -40,8 +40,8 @@ const Chart = ({ data, days }) => {
         style={{ axisLabel: { padding: 40 } }}
         label="Total Cupcakes"
       />
-      <VictoryLine {...makeChartProps('lightgreen')} data={basic} />
-      <VictoryLine {...makeChartProps('lightseagreen')} data={deluxe} />
+      <VictoryLine {...makeChartProps('lightblue')} data={basic} />
+      <VictoryLine {...makeChartProps('cornflowerblue')} data={deluxe} />
       <VictoryLine {...makeChartProps('darkmagenta')} data={total} />
     </VictoryChart>
   );
