@@ -6,19 +6,20 @@ body {
 
 h1 {
   padding: 20px;
-  width: 350px;
   margin: 20px auto;
   border-bottom: 2px dashed lightblue;
 }
 
 .App {
+  /* max-width: 600px; */
   display: flex;
   text-align: center;
   justify-content: center;
+  flex-grow: 0.5;
 }
 
 .App-container {
-  width: 400px;
+  max-width: 800px;
   margin-top: 50px;
   padding: 0 50px 20px;
   border: 4px solid lightblue;
