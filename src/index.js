@@ -8,11 +8,16 @@ import './index.css';
 const weeks = [MatildasCupcakes, MarthaDentist];
 
 function App() {
-  const [currentWeek, setCurrentWeek] = useState(0);
+  const [currentWeek, setCurrentWeek] = useState(1);
   const Main = weeks[currentWeek];
   return (
     <div>
-      <select className="menu" onChange={e => setCurrentWeek(e.target.value)} name="weeks">
+      <select
+        className="menu"
+        value={currentWeek}
+        onChange={e => setCurrentWeek(e.target.value)}
+        name="weeks"
+      >
         <option value={0}>Week 1</option>
         <option value={1}>Week 2</option>
       </select>

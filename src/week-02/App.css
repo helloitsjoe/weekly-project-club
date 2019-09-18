@@ -1,0 +1,33 @@
+body {
+  font-family: 'Roboto Mono', Courier, monospace;
+}
+
+.Dentist {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.Dentist-container {
+  width: 60%;
+}
+
+.Table-cell {
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+}
+
+.ReactTable .rt-td {
+  padding: 0;
+}
+
+.empty {
+  background-color: aquamarine;
+}
+
+.full {
+  background-color: tomato;
+}
