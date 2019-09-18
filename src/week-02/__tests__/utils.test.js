@@ -14,13 +14,79 @@ let testOptions;
 
 describe('createWeeklyCal', () => {
   it('creates M-F 8-5 cal by default', () => {
-    const oneDay = new Array(18);
+    const oneDay = new Array(SLOTS_IN_NINE_HOUR_DAY).fill(null);
     expect(createWeeklyCal()).toEqual({
       mon: oneDay,
       tues: oneDay,
       wed: oneDay,
       thurs: oneDay,
       fri: oneDay,
+    });
+  });
+
+  it('accepts start/end hours', () => {
+    const threeHourDay = new Array(6).fill(null);
+    expect(createWeeklyCal({ startHour: 12, endHour: 15 })).toEqual({
+      mon: threeHourDay,
+      tues: threeHourDay,
+      wed: threeHourDay,
+      thurs: threeHourDay,
+      fri: threeHourDay,
+    });
+  });
+
+  it('throws if start time is before end time', () => {
+    expect(() => createWeeklyCal({ startHour: 1, endHour: 0 })).toThrow();
+  });
+});
+
+describe('getOpenSlots', () => {
+  beforeEach(() => {
+    cal = createWeeklyCal({ startHour: 12, endHour: 14 });
+    cal.mon[0] = 1;
+    cal.tues[1] = 2;
+    cal.tues[2] = 2;
+    cal.wed[1] = 1;
+    cal.thurs[2] = 1;
+    // TODO: Come up with more complex test cases
+    // m: [1, 0, 0, 0]
+    // t: [0, 2, 2, 0]
+    // w: [0, 1, 0, 0]
+    // t: [0, 0, 1, 0]
+    // t: [0, 0, 0, 0]
+  });
+
+  afterEach(() => {
+    cal = null;
+  });
+
+  it('gets open slots for cleaning', () => {
+    expect(getOpenSlots({ type: CLEANING, cal })).toEqual({
+      mon: [false, true, true, true],
+      tues: [true, false, false, true],
+      wed: [true, false, true, true],
+      thurs: [true, true, false, true],
+      fri: new Array(4).fill(true),
+    });
+  });
+
+  it('gets open slots for filling', () => {
+    expect(getOpenSlots({ type: FILLING, cal })).toEqual({
+      mon: [false, true, true, true],
+      tues: [false, false, false, false],
+      wed: [false, false, true, true],
+      thurs: [true, true, false, false],
+      fri: [...new Array(4).fill(true)],
+    });
+  });
+
+  it('gets open slots for root canal', () => {
+    expect(getOpenSlots({ type: ROOT_CANAL, cal })).toEqual({
+      mon: [false, true, true, true],
+      tues: [false, false, false, false],
+      wed: [false, false, false, false],
+      thurs: [false, false, false, false],
+      fri: [...new Array(4).fill(true)],
     });
   });
 });

@@ -15,7 +15,7 @@ describe('updateCal', () => {
   `('returns updated cal with $count slots booked if $typeName', ({ count, type }) => {
     return updateCal({ name: 'JB', day: 'mon', type, timeSlot: 0 }).then(newCal => {
       const updatedSlots = new Array(count).fill(type);
-      const restOfDay = new Array(SLOTS_IN_NINE_HOUR_DAY).slice(count);
+      const restOfDay = new Array(SLOTS_IN_NINE_HOUR_DAY).fill(null).slice(count);
       expect(newCal.mon).toEqual(updatedSlots.concat(restOfDay));
     });
   });

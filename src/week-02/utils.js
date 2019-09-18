@@ -4,21 +4,59 @@ export const CLEANING = 1;
 export const FILLING = 2;
 export const ROOT_CANAL = 3;
 
-export const createWeeklyCal = () => {
-  // TODO: Customizable start/end times
+export const createWeeklyCal = ({ startHour = 8, endHour = 17 } = {}) => {
   // TODO: Add date headers, based on today
   // TODO: Option to include Sat/Sun
+  if (startHour > endHour) {
+    throw new Error('Start time must be before end time!');
+  }
+
+  const halfHourSlots = (endHour - startHour) * 2;
+
   return {
-    mon: new Array(SLOTS_IN_NINE_HOUR_DAY),
-    tues: new Array(SLOTS_IN_NINE_HOUR_DAY),
-    wed: new Array(SLOTS_IN_NINE_HOUR_DAY),
-    thurs: new Array(SLOTS_IN_NINE_HOUR_DAY),
-    fri: new Array(SLOTS_IN_NINE_HOUR_DAY),
+    mon: new Array(halfHourSlots).fill(null),
+    tues: new Array(halfHourSlots).fill(null),
+    wed: new Array(halfHourSlots).fill(null),
+    thurs: new Array(halfHourSlots).fill(null),
+    fri: new Array(halfHourSlots).fill(null),
   };
 };
 
-export const getOpenSlots = (type, cal) => {
-  // Return slots based on type
+export const getOpenSlots = ({ type, cal }) => {
+  if (type === CLEANING) {
+    return Object.keys(cal).reduce((acc, key) => {
+      acc[key] = cal[key].map(slot => !slot);
+      return acc;
+    }, {});
+  }
+  if (type === FILLING) {
+    return Object.keys(cal).reduce((acc, key) => {
+      acc[key] = cal[key].map((slot, i, arr) => {
+        const blocked =
+          arr[i] ||
+          ((arr[i - 1] || i - 1 < 0) && arr[i + 1]) ||
+          (arr[i - 1] && i + type > arr.length);
+        return !blocked;
+      });
+      return acc;
+    }, {});
+  }
+  if (type === ROOT_CANAL) {
+    return Object.keys(cal).reduce((acc, key) => {
+      acc[key] = cal[key].map((slot, i, arr) => {
+        // TODO: Yikes.
+        const curr = arr[i];
+        const prevAndNext =
+          (arr[i - 1] || arr[i - 2] || (i - 1 < 0 || i - 2 < 0)) && (arr[i + 1] || arr[i + 2]);
+        const last =
+          (arr[i - 1] && i + type > arr.length) || (arr[i - 2] && i + type - 1 > arr.length);
+        const blocked = curr || prevAndNext || last;
+        return !blocked;
+      });
+      return acc;
+    }, {});
+  }
+  return null;
 };
 
 export const validateBooking = ({ day, timeSlot, type, cal }) => {
