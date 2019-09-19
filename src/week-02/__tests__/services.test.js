@@ -1,4 +1,4 @@
-import { ROOT_CANAL, FILLING, CLEANING, SLOTS_IN_NINE_HOUR_DAY } from '../utils';
+import { ROOT_CANAL, FILLING, CLEANING, SLOTS_IN_NINE_HOUR_DAY, makeSlot } from '../utils';
 import { resetCal, updateCal } from '../services';
 
 describe('updateCal', () => {
@@ -14,8 +14,8 @@ describe('updateCal', () => {
     ${1}  | ${CLEANING}   | ${'cleaning'}
   `('returns updated cal with $count slots booked if $typeName', ({ count, type }) => {
     return updateCal({ name: 'JB', day: 'mon', type, timeSlot: 0 }).then(newCal => {
-      const updatedSlots = new Array(count).fill(type);
-      const restOfDay = new Array(SLOTS_IN_NINE_HOUR_DAY).fill(null).slice(count);
+      const updatedSlots = new Array(count).fill(makeSlot(type));
+      const restOfDay = new Array(SLOTS_IN_NINE_HOUR_DAY).fill({}).slice(count);
       expect(newCal.mon).toEqual(updatedSlots.concat(restOfDay));
     });
   });

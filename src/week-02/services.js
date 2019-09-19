@@ -1,6 +1,6 @@
-import { createWeeklyCal } from './utils';
+import { makeWeeklyCal, makeSlot } from './utils';
 
-let cal = createWeeklyCal();
+let cal = makeWeeklyCal();
 
 const sleep = (ms = 0) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -18,7 +18,7 @@ export const updateCal = ({ day, timeSlot, type }) => {
   return sleep(500).then(() => {
     cal[day] = [
       ...cal[day].slice(0, timeSlot),
-      ...new Array(type).fill(type),
+      ...new Array(type).fill(makeSlot(type)),
       ...cal[day].slice(timeSlot + type),
     ];
     return cal;
@@ -27,5 +27,5 @@ export const updateCal = ({ day, timeSlot, type }) => {
 
 // Reset helper for tests
 export const resetCal = () => {
-  cal = createWeeklyCal();
+  cal = makeWeeklyCal();
 };
