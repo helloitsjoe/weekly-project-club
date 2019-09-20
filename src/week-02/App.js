@@ -19,14 +19,15 @@ const slotShape = { text: PropTypes.string, type: typesShape, open: PropTypes.bo
 const getRandomSlotType = () => Math.floor(Math.random() * 4);
 const sparsify = type => (Math.round(Math.random()) ? 0 : type);
 
-const cal = makeWeeklyCal({ fillWith: { text: 'a', type: 1 } });
+const weeklyCal = makeWeeklyCal({ fillWith: { text: 'a', type: 1 } });
 
-for (let key in cal) {
-  cal[key] = cal[key].map(ea => {
+const cal = Object.entries(weeklyCal).reduce((acc, [key, slots]) => {
+  acc[key] = slots.map(() => {
     const type = sparsify(getRandomSlotType());
     return { text: TYPES[type] || '', type };
   });
-}
+  return acc;
+}, {});
 
 const processCalendarData = (newData, oldData = []) => {
   return Object.entries(newData).reduce((acc, [day, slots]) => {
@@ -37,25 +38,19 @@ const processCalendarData = (newData, oldData = []) => {
   }, oldData);
 };
 
-const Cell = ({ row, currentType }) => {
-  // console.log(`props.row:`, row);
-  const [status, setStatus] = useState('');
-
+const RawCell = ({ row, currentType, onMouseEnter, status }) => {
   const validate = ({ column, index }) => {
-    // const { type } = value;
     const message = validateBooking({ currentType, day: column.id, cal, timeSlot: index });
     console.log(message || 'Your appointment is BOOKED!');
   };
 
-  const typeClasses = ['', 'cleaning', 'filling', 'root-canal'];
-  const open = row.value.open ? typeClasses[currentType] : '';
+  const open = row.value.open ? TYPES[currentType].toLowerCase().replace(' ', '-') : '';
 
   return (
     // eslint-disable-next-line
     <div
       className={['Table-cell', status, open].join(' ')}
-      onMouseLeave={() => setStatus('')}
-      onMouseEnter={() => setStatus(row.value.text ? 'full' : 'empty')}
+      onMouseEnter={() => onMouseEnter(row)}
       onClick={() => validate(row)}
     >
       {row.value.text}
@@ -63,35 +58,62 @@ const Cell = ({ row, currentType }) => {
   );
 };
 
-Cell.propTypes = {
+RawCell.propTypes = {
   row: PropTypes.shape({
     value: PropTypes.shape(slotShape),
   }).isRequired,
+  status: PropTypes.string.isRequired,
   currentType: typesShape.isRequired,
+  onMouseEnter: PropTypes.func.isRequired,
 };
 
 function App() {
   const [data, setData] = useState(processCalendarData(cal));
   const [currentType, setCurrentType] = useState(0);
-  // console.log(`data:`, data);
+  const [currentColId, setCurrentColId] = useState(0);
+  const [actives, setActives] = useState([]);
 
   const handleClick = type => {
     const openSlots = getOpenSlots({ type, cal });
-    const calWithOpen = {};
-    // TODO: Make this better
-    for (let key in cal) {
-      calWithOpen[key] = cal[key].map((ea, i) => {
-        return { ...ea, open: openSlots[key][i] };
+
+    const calWithOpen = Object.entries(cal).reduce((acc, [key, slots]) => {
+      acc[key] = slots.map((slot, i) => {
+        return { ...slot, open: openSlots[key][i] };
       });
-    }
+      return acc;
+    }, {});
+
     setCurrentType(type);
     setData(processCalendarData(calWithOpen, cal));
   };
 
-  const columns = Object.keys(data[0]).map(key => ({
+  const handleMouseEnter = row => {
+    const activesByType = [];
+    for (let i = 0; i < currentType; i++) {
+      activesByType.push(row.index + i);
+    }
+    setActives(activesByType);
+    setCurrentColId(row.column.id);
+  };
+
+  const getActive = row => {
+    if (actives.includes(row.index) && currentColId === row.column.id) {
+      return row.value.text ? 'full' : 'empty';
+    }
+    return '';
+  };
+
+  const columns = Object.keys(cal).map(key => ({
     Header: key.toUpperCase(),
     accessor: key,
-    Cell: row => <Cell currentType={currentType} row={row} />,
+    Cell: row => (
+      <RawCell
+        status={getActive(row)}
+        onMouseEnter={handleMouseEnter}
+        currentType={currentType}
+        row={row}
+      />
+    ),
   }));
 
   return (

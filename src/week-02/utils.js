@@ -79,7 +79,7 @@ export const validateBooking = ({ day, timeSlot, currentType, cal }) => {
     return 'Please select a type to book an appointment';
   }
 
-  if (timeSlot + currentType - 1 > cal[day].length) {
+  if (timeSlot + currentType > cal[day].length) {
     return 'Your entire appointment must be within work hours!';
   }
 
