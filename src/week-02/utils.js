@@ -10,7 +10,22 @@ export const TYPES = {
   [ROOT_CANAL]: 'ROOT CANAL',
 };
 
-const open = obj => !!obj && !obj.type; // coerce undefined to false
+const isOpen = obj => !!obj && !obj.type; // coerce undefined to false
+
+export const mapSlots = (cal, fn) =>
+  Object.entries(cal).reduce((acc, [key, slots]) => {
+    acc[key] = slots.map(fn);
+    return acc;
+  }, {});
+
+export const formatCalData = newData => {
+  return Object.entries(newData).reduce((acc, [day, slots]) => {
+    return slots.map((slot, i) => ({
+      ...acc[i],
+      [day]: slot,
+    }));
+  }, {});
+};
 
 export const makeWeeklyCal = ({ startHour = 8, endHour = 17, fillWith = {} } = {}) => {
   // TODO: Option to include Sat/Sun
@@ -33,53 +48,43 @@ export const makeRandomWeeklyCal = () => {
   const getRandomSlotType = () => Math.floor(Math.random() * 4);
   const sparsify = type => (Math.round(Math.random()) ? 0 : type);
 
-  const weeklyCal = makeWeeklyCal({ fillWith: { text: 'a', type: 1 } });
-  return Object.entries(weeklyCal).reduce((acc, [key, slots]) => {
-    acc[key] = slots.map(() => {
-      const type = sparsify(getRandomSlotType());
-      return { text: TYPES[type] || '', type };
-    });
-    return acc;
-  }, {});
+  const weeklyCal = makeWeeklyCal({ fillWith: {} });
+  return mapSlots(weeklyCal, () => {
+    const type = sparsify(getRandomSlotType());
+    return { text: TYPES[type] || '', type, open: false };
+  });
 };
 
 export const makeSlot = type => (type ? { type, text: TYPES[type] } : {});
 
-export const getOpenSlots = ({ type, cal }) => {
+export const markOpenSlots = ({ type, cal }) => {
   if (type === CLEANING) {
-    return Object.keys(cal).reduce((acc, key) => {
-      acc[key] = cal[key].map(slot => !slot.type);
-      return acc;
-    }, {});
+    return mapSlots(cal, slot => ({ ...slot, open: !slot.type }));
   }
   if (type === FILLING) {
-    return Object.keys(cal).reduce((acc, key) => {
-      acc[key] = cal[key].map((slot, i, arr) => {
-        const curr = arr[i];
-        const next = arr[i + 1];
-        const prev = arr[i - 1];
-        return !curr.type && (open(next) || open(prev));
-      });
-      return acc;
-    }, {});
+    return mapSlots(cal, (slot, i, arr) => {
+      const curr = arr[i];
+      const next = arr[i + 1];
+      const prev = arr[i - 1];
+      const open = !curr.type && (isOpen(next) || isOpen(prev));
+      return { ...slot, open };
+    });
   }
   if (type === ROOT_CANAL) {
-    return Object.keys(cal).reduce((acc, key) => {
-      acc[key] = cal[key].map((slot, i, arr) => {
-        const curr = arr[i];
-        const next = arr[i + 1];
-        const prev = arr[i - 1];
-        const twoNext = arr[i + 2];
-        const twoPrev = arr[i - 2];
-        const threeOpen =
-          (open(next) && open(prev)) ||
-          (!open(next) && open(prev) && open(twoPrev)) ||
-          (!open(prev) && open(next) && open(twoNext));
+    return mapSlots(cal, (slot, i, arr) => {
+      const curr = arr[i];
+      const next = arr[i + 1];
+      const prev = arr[i - 1];
+      const twoNext = arr[i + 2];
+      const twoPrev = arr[i - 2];
+      const threeOpen =
+        (isOpen(next) && isOpen(prev)) ||
+        (!isOpen(next) && isOpen(prev) && isOpen(twoPrev)) ||
+        (!isOpen(prev) && isOpen(next) && isOpen(twoNext));
 
-        return !curr.type && threeOpen;
-      });
-      return acc;
-    }, {});
+      const open = !curr.type && threeOpen;
+      return { ...slot, open };
+    });
   }
   return null;
 };

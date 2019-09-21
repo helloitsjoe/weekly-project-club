@@ -8,6 +8,16 @@ button {
   color: black;
 }
 
+h1,
+h2 {
+  font-family: 'Montserrat', sans-serif;
+  border: none;
+}
+
+h2 {
+  font-weight: normal;
+}
+
 .Dentist {
   display: flex;
   justify-content: center;
@@ -44,10 +54,24 @@ button {
   background-color: slateblue;
 }
 
+.unavailable {
+  background-color: gray;
+}
+
 .empty {
   background-color: yellowgreen;
 }
 
 .full {
   background-color: tomato;
+}
+
+.submitting {
+  color: white;
+  position: absolute;
+  width: 500px;
+  height: 50px;
+  padding-top: 30px;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.6);
 }

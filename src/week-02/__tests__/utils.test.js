@@ -5,11 +5,11 @@ import {
   ROOT_CANAL,
   FILLING,
   makeSlot,
-  getOpenSlots,
+  markOpenSlots,
   SLOTS_IN_NINE_HOUR_DAY,
+  mapSlots,
 } from '../utils';
 
-// const today = new Date('2019-09-16T03:23:08.066Z');
 let cal;
 let testOptions;
 
@@ -19,6 +19,18 @@ describe('makeSlot', () => {
     expect(makeSlot(FILLING)).toEqual({ type: FILLING, text: 'FILLING' });
     expect(makeSlot(ROOT_CANAL)).toEqual({ type: ROOT_CANAL, text: 'ROOT CANAL' });
     expect(makeSlot()).toEqual({});
+  });
+});
+
+describe('mapSlots', () => {
+  it('calls mapping function over slots in calendar object', () => {
+    const calData = { mon: [1, 2, 3], tues: [4, 5] };
+    // Should include all arguments to mapping function
+    const squareFn = (ea, i, arr) => ea * ea + i + arr.length;
+    expect(mapSlots(calData, squareFn)).toEqual({
+      mon: [4, 8, 14],
+      tues: [18, 28],
+    });
   });
 });
 
@@ -50,7 +62,9 @@ describe('makeWeeklyCal', () => {
   });
 });
 
-describe('getOpenSlots', () => {
+describe('markOpenSlots', () => {
+  const getOpenBools = calData => mapSlots(calData, slot => slot.open);
+
   beforeEach(() => {
     cal = makeWeeklyCal({ startHour: 12, endHour: 14 });
     cal.mon[0] = makeSlot(CLEANING);
@@ -71,7 +85,7 @@ describe('getOpenSlots', () => {
   });
 
   it('gets open slots for cleaning', () => {
-    expect(getOpenSlots({ type: CLEANING, cal })).toEqual({
+    expect(getOpenBools(markOpenSlots({ type: CLEANING, cal }))).toEqual({
       mon: [false, true, true, true],
       tues: [true, false, false, true],
       wed: [true, false, true, true],
@@ -81,7 +95,7 @@ describe('getOpenSlots', () => {
   });
 
   it('gets open slots for filling', () => {
-    expect(getOpenSlots({ type: FILLING, cal })).toEqual({
+    expect(getOpenBools(markOpenSlots({ type: FILLING, cal }))).toEqual({
       mon: [false, true, true, true],
       tues: [false, false, false, false],
       wed: [false, false, true, true],
@@ -91,7 +105,7 @@ describe('getOpenSlots', () => {
   });
 
   it('gets open slots for root canal', () => {
-    expect(getOpenSlots({ type: ROOT_CANAL, cal })).toEqual({
+    expect(getOpenBools(markOpenSlots({ type: ROOT_CANAL, cal }))).toEqual({
       mon: [false, true, true, true],
       tues: [false, false, false, false],
       wed: [false, false, false, false],
@@ -113,7 +127,7 @@ describe('getOpenSlots', () => {
     cal.wed[3] = makeSlot(CLEANING);
     cal.thurs[2] = makeSlot(CLEANING);
     cal.thurs[3] = makeSlot(CLEANING);
-    expect(getOpenSlots({ type: ROOT_CANAL, cal })).toEqual({
+    expect(getOpenBools(markOpenSlots({ type: ROOT_CANAL, cal }))).toEqual({
       mon: [false, false, false, false, false, false],
       tues: [false, true, true, true, false, false],
       wed: [false, false, false, false, false, false],
