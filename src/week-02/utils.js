@@ -29,6 +29,20 @@ export const makeWeeklyCal = ({ startHour = 8, endHour = 17, fillWith = {} } = {
   };
 };
 
+export const makeRandomWeeklyCal = () => {
+  const getRandomSlotType = () => Math.floor(Math.random() * 4);
+  const sparsify = type => (Math.round(Math.random()) ? 0 : type);
+
+  const weeklyCal = makeWeeklyCal({ fillWith: { text: 'a', type: 1 } });
+  return Object.entries(weeklyCal).reduce((acc, [key, slots]) => {
+    acc[key] = slots.map(() => {
+      const type = sparsify(getRandomSlotType());
+      return { text: TYPES[type] || '', type };
+    });
+    return acc;
+  }, {});
+};
+
 export const makeSlot = type => (type ? { type, text: TYPES[type] } : {});
 
 export const getOpenSlots = ({ type, cal }) => {

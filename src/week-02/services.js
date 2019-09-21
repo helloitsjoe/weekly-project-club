@@ -1,12 +1,13 @@
-import { makeWeeklyCal, makeSlot } from './utils';
+import { makeRandomWeeklyCal, makeWeeklyCal, makeSlot } from './utils';
 
-let cal = makeWeeklyCal();
+let cal = makeRandomWeeklyCal();
 
 const sleep = (ms = 0) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const fetchCal = () => {
   // Fake GET
-  return sleep(500).then(() => Promise.resolve(cal));
+  // return sleep(500).then(() => Promise.resolve(cal));
+  return Promise.resolve(cal);
 };
 
 export const updateCal = ({ day, timeSlot, type }) => {

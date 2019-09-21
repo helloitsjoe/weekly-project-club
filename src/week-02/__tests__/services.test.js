@@ -13,6 +13,7 @@ describe('updateCal', () => {
     ${2}  | ${FILLING}    | ${'filling'}
     ${1}  | ${CLEANING}   | ${'cleaning'}
   `('returns updated cal with $count slots booked if $typeName', ({ count, type }) => {
+    resetCal();
     return updateCal({ name: 'JB', day: 'mon', type, timeSlot: 0 }).then(newCal => {
       const updatedSlots = new Array(count).fill(makeSlot(type));
       const restOfDay = new Array(SLOTS_IN_NINE_HOUR_DAY).fill({}).slice(count);

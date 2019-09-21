@@ -157,7 +157,7 @@ describe('validateBooking', () => {
   });
 
   it('forbids booking if multi-block goes after end time', () => {
-    const timeSlot = cal.mon.length;
+    const timeSlot = cal.mon.length - 1;
     expect(validateBooking({ ...testOptions, timeSlot, currentType: CLEANING })).toBe('');
     expect(validateBooking({ ...testOptions, timeSlot, currentType: FILLING })).toBe(
       'Your entire appointment must be within work hours!'
