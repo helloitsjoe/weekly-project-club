@@ -154,7 +154,7 @@ describe('validateBooking', () => {
 
   it('forbids booking if no type is selected', () => {
     expect(validateBooking({ ...testOptions, currentType: 0 })).toBe(
-      'Please select a type to book an appointment'
+      'Please select an appointment type'
     );
   });
 

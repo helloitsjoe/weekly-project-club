@@ -1,4 +1,5 @@
-import { ROOT_CANAL, FILLING, CLEANING, SLOTS_IN_NINE_HOUR_DAY, makeSlot } from '../utils';
+/* eslint-disable indent */
+import { ROOT_CANAL, FILLING, CLEANING, SLOTS_IN_NINE_HOUR_DAY } from '../utils';
 import { resetCal, updateCal } from '../services';
 
 describe('updateCal', () => {

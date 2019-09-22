@@ -39,6 +39,7 @@
 }
 
 .Dentist-subhead {
+  font-family: 'Montserrat', sans-serif;
   font-weight: normal;
   margin: 0px;
 }
@@ -55,8 +56,18 @@
   padding: 0;
 }
 
-.ReactTable .rt-thead {
+.ReactTable .rt-thead.-header {
   background-color: darkgray;
+  color: white;
+  box-shadow: none;
+}
+
+.ReactTable .rt-table {
+  border: 0;
+}
+
+.rt-th:first-child {
+  background-color: #eee;
 }
 
 .cleaning {
@@ -85,7 +96,7 @@
   background-color: tomato;
 }
 
-.submitting {
+.snackbar {
   color: white;
   position: absolute;
   width: 500px;
@@ -95,7 +106,12 @@
   background-color: rgba(0, 0, 0, 0.6);
 }
 
+.error-space {
+  height: 30px;
+}
+
 .error {
+  font-family: 'Montserrat', sans-serif;
   color: red;
   font-weight: 700;
 }

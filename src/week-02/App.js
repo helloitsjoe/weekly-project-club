@@ -4,11 +4,11 @@ import Table from 'react-table';
 import {
   range,
   TYPES,
+  FILLING,
+  CLEANING,
+  ROOT_CANAL,
   formatCalData,
   markOpenSlots,
-  CLEANING,
-  FILLING,
-  ROOT_CANAL,
   validateBooking,
 } from './utils';
 import 'react-table/react-table.css';
@@ -18,7 +18,7 @@ import { fetchCal, updateCal } from './services';
 const typesShape = PropTypes.oneOf([0, 1, 2, 3]);
 const slotShape = { text: PropTypes.string, type: typesShape, open: PropTypes.bool };
 
-const RawCell = ({ cal, row, currentType, onMouseEnter, onSubmit, onError, status }) => {
+const Cell = ({ cal, row, currentType, onMouseEnter, onSubmit, onError, status }) => {
   const handleCellClick = ({ column, index }) => {
     const message = validateBooking({ currentType, day: column.id, cal, timeSlot: index });
     if (message) {
@@ -43,7 +43,7 @@ const RawCell = ({ cal, row, currentType, onMouseEnter, onSubmit, onError, statu
   );
 };
 
-RawCell.propTypes = {
+Cell.propTypes = {
   currentType: typesShape.isRequired,
   status: PropTypes.string.isRequired,
   onError: PropTypes.func.isRequired,
@@ -63,7 +63,7 @@ function App() {
         case 'TYPE_SELECTED': {
           return {
             ...s,
-            actives: [],
+            activeIndices: [],
             errorMessage: '',
             currentType: payload,
             calData: markOpenSlots({ type: payload, cal: s.calData }),
@@ -71,7 +71,7 @@ function App() {
         }
         case 'HOVER': {
           const activeSlots = range(s.currentType).map(ea => payload.rowIndex + ea);
-          return { ...s, actives: activeSlots, currentColId: payload.columnId };
+          return { ...s, activeIndices: activeSlots, currentColId: payload.columnId };
         }
         case 'ERROR':
           return { ...s, errorMessage: payload };
@@ -88,7 +88,7 @@ function App() {
       }
     },
     {
-      actives: [],
+      activeIndices: [],
       calData: {},
       currentType: 0,
       currentColId: 0,
@@ -103,7 +103,7 @@ function App() {
     });
   }, []);
 
-  const { submitting, calData, currentType, currentColId, actives, errorMessage } = state;
+  const { submitting, calData, currentType, currentColId, activeIndices, errorMessage } = state;
 
   const selectType = type => {
     dispatch({ type: 'TYPE_SELECTED', payload: type });
@@ -125,8 +125,8 @@ function App() {
   };
 
   const getActive = row => {
-    if (actives.includes(row.index) && currentColId === row.column.id) {
-      const activesAreEmpty = actives.every(active => {
+    if (activeIndices.includes(row.index) && currentColId === row.column.id) {
+      const activesAreEmpty = activeIndices.every(active => {
         const activeSlot = calData[currentColId][active];
         return activeSlot && !activeSlot.text;
       });
@@ -140,7 +140,7 @@ function App() {
       Header: key.toUpperCase(),
       accessor: key,
       Cell: row => (
-        <RawCell
+        <Cell
           status={getActive(row)}
           onError={handleError}
           onSubmit={handleSubmit}
@@ -160,7 +160,8 @@ function App() {
   return (
     <div className="Dentist">
       <h1 className="Dentist-head">Martha&apos;s Dentapalooza</h1>
-      <h2 className="Dentist-subhead">Schedule for Next Week</h2>
+      <h2 className="Dentist-subhead">Schedule for Next Week:</h2>
+      <div className="error-space">{errorMessage && <Error message={errorMessage} />}</div>
       <div className="Dentist-container">
         <div className="Dentist-buttons">
           <span>Appointment Types:</span>
@@ -183,7 +184,6 @@ function App() {
           </button>
         </div>
         <div className="Dentist-table">
-          {errorMessage && <Error message={errorMessage} />}
           <Table
             data={formattedCal}
             columns={columns}
@@ -192,13 +192,27 @@ function App() {
           />
         </div>
       </div>
-      {submitting && <Submitting />}
+      {(!formattedCal.length || submitting) && <Snackbar submitting={submitting} />}
     </div>
   );
 }
 
-const Submitting = () => <div className="submitting">Submitting...</div>;
-
 const Error = ({ message }) => <div className="error">{message}</div>;
+
+Error.propTypes = {
+  message: PropTypes.string.isRequired,
+};
+
+const Snackbar = ({ submitting }) => (
+  <div className="snackbar">{submitting ? 'Submitting...' : 'Loading...'}</div>
+);
+
+Snackbar.propTypes = {
+  submitting: PropTypes.bool,
+};
+
+Snackbar.defaultProps = {
+  submitting: false,
+};
 
 export default App;

@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 export const SLOTS_IN_NINE_HOUR_DAY = 18;
 
 export const CLEANING = 1;
@@ -112,7 +113,7 @@ export const validateBooking = ({ day, timeSlot, currentType, cal }) => {
   }
 
   if (!currentType) {
-    return 'Please select a type to book an appointment';
+    return 'Please select an appointment type';
   }
 
   if (timeSlot + currentType > cal[day].length) {
