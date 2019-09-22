@@ -1,3 +1,5 @@
+Week 2: Martha's Dentapalooza
+
 This week you’re working with a dentist named Martha.
 
 Martha has a very erratic schedule and has a hard time keeping regular office hours. She often has

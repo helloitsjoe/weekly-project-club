@@ -18,8 +18,8 @@ function App() {
         onChange={e => setCurrentWeek(e.target.value)}
         name="weeks"
       >
-        <option value={0}>Week 1</option>
-        <option value={1}>Week 2</option>
+        <option value={0}>Week 1: Matilda&apos;s Cupcakes</option>
+        <option value={1}>Week 2: Martha&apos;s Dentapalooza</option>
       </select>
       <Main />
     </div>
