@@ -36,7 +36,7 @@ describe('mapSlots', () => {
 
 describe('makeWeeklyCal', () => {
   it('creates M-F 8-5 cal by default', () => {
-    const oneDay = new Array(SLOTS_IN_NINE_HOUR_DAY).fill({});
+    const oneDay = new Array(SLOTS_IN_NINE_HOUR_DAY).fill(expect.any(Object));
     expect(makeWeeklyCal()).toEqual({
       mon: oneDay,
       tues: oneDay,
@@ -47,7 +47,7 @@ describe('makeWeeklyCal', () => {
   });
 
   it('accepts start/end hours', () => {
-    const threeHourDay = new Array(6).fill({});
+    const threeHourDay = new Array(6).fill(expect.any(Object));
     expect(makeWeeklyCal({ startHour: 12, endHour: 15 })).toEqual({
       mon: threeHourDay,
       tues: threeHourDay,

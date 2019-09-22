@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Table from 'react-table';
 import {
+  range,
   TYPES,
   formatCalData,
   markOpenSlots,
@@ -22,7 +23,8 @@ const RawCell = ({ cal, row, currentType, onMouseEnter, onSubmit, status }) => {
     const message = validateBooking({ currentType, day: column.id, cal, timeSlot: index });
     if (message) {
       // TODO: Pop snackbar with message
-      return console.log(message || 'Your appointment is BOOKED!');
+      console.log(message || 'Your appointment is BOOKED!');
+      return;
     }
     onSubmit({ day: column.id, timeSlot: index, type: currentType });
   };
@@ -42,12 +44,11 @@ const RawCell = ({ cal, row, currentType, onMouseEnter, onSubmit, status }) => {
 };
 
 RawCell.propTypes = {
-  row: PropTypes.shape({
-    value: PropTypes.shape(slotShape),
-  }).isRequired,
-  status: PropTypes.string.isRequired,
   currentType: typesShape.isRequired,
+  status: PropTypes.string.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   onMouseEnter: PropTypes.func.isRequired,
+  row: PropTypes.shape({ value: PropTypes.shape(slotShape) }).isRequired,
   cal: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.shape(slotShape))).isRequired,
 };
 
@@ -72,7 +73,7 @@ function App() {
   };
 
   const handleMouseEnter = row => {
-    const activeSlots = [...Array(currentType)].map((_, i) => row.index + i);
+    const activeSlots = range(currentType).map(ea => row.index + ea);
     setActives(activeSlots);
     setCurrentColId(row.column.id);
   };
@@ -86,45 +87,60 @@ function App() {
   };
 
   const getActive = row => {
-    // TODO: If any in actives are full, all should be red
     if (actives.includes(row.index) && currentColId === row.column.id) {
-      return row.value.text ? 'full' : 'empty';
+      const activesAreEmpty = actives.every(active => {
+        const activeSlot = calData[currentColId][active];
+        return activeSlot && !activeSlot.text;
+      });
+      return activesAreEmpty ? 'empty' : 'full';
     }
     return '';
   };
-  console.log(`currentType:`, currentType);
-  const columns = Object.keys(calData).map(key => ({
-    Header: key.toUpperCase(),
-    accessor: key,
-    Cell: row => (
-      <RawCell
-        status={getActive(row)}
-        onMouseEnter={handleMouseEnter}
-        onSubmit={handleSubmit}
-        currentType={currentType}
-        row={row}
-        cal={calData}
-      />
-    ),
-  }));
 
-  const formattedCal = Object.keys(calData).length ? formatCalData(calData) : [];
+  const columns = [{ accessor: 'mon.time' }].concat(
+    Object.keys(calData).map(key => ({
+      Header: key.toUpperCase(),
+      accessor: key,
+      Cell: row => (
+        <RawCell
+          status={getActive(row)}
+          onMouseEnter={handleMouseEnter}
+          onSubmit={handleSubmit}
+          currentType={currentType}
+          row={row}
+          cal={calData}
+        />
+      ),
+    }))
+  );
+
+  const formattedCal = useMemo(() => (Object.keys(calData).length ? formatCalData(calData) : []), [
+    calData,
+  ]);
 
   return (
     <div className="Dentist">
       <div className="Dentist-container">
-        <h1>Martha&apos;s Dentapalooza</h1>
-        <h2>Schedule for Next Week</h2>
+        <h1 className="Dentist-head">Martha&apos;s Dentapalooza</h1>
+        <h2 className="Dentist-subhead">Schedule for Next Week</h2>
         <div>
-          <button type="button" className="cleaning" onClick={() => selectType(CLEANING, calData)}>
+          <button
+            type="button"
+            className="Dentist-btn cleaning"
+            onClick={() => selectType(CLEANING, calData)}
+          >
             Cleaning Slots
           </button>
-          <button type="button" className="filling" onClick={() => selectType(FILLING, calData)}>
+          <button
+            type="button"
+            className="Dentist-btn filling"
+            onClick={() => selectType(FILLING, calData)}
+          >
             Filling Slots
           </button>
           <button
             type="button"
-            className="root-canal"
+            className="Dentist-btn root-canal"
             onClick={() => selectType(ROOT_CANAL, calData)}
           >
             Root canal Slots
@@ -135,7 +151,6 @@ function App() {
           columns={columns}
           showPagination={false}
           pageSize={formattedCal.length}
-          rows
         />
       </div>
       {submitting && <Submitting />}

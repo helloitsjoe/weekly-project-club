@@ -1,16 +1,10 @@
 body {
-  font-family: 'Quicksand', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   background-color: #eee;
-  color: darkmagenta;
-}
-
-h1 {
-  padding: 20px;
-  margin: 20px auto;
-  border-bottom: 2px dashed lightblue;
 }
 
 .App {
+  font-family: 'Quicksand', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  color: darkmagenta;
   /* max-width: 600px; */
   display: flex;
   text-align: center;
@@ -20,11 +14,17 @@ h1 {
 
 .App-container {
   max-width: 800px;
-  margin-top: 50px;
+  margin-top: 20px;
   padding: 0 50px 20px;
   border: 4px solid lightblue;
   box-shadow: 0 5px 10px -5px;
   background-color: #fff;
+}
+
+.App-head {
+  padding: 20px;
+  margin: 20px auto;
+  border-bottom: 2px dashed lightblue;
 }
 
 .App-stats {

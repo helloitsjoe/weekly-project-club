@@ -1,24 +1,24 @@
-body {
-  font-family: 'Roboto Mono', Courier, monospace;
-  color: black;
-}
-
-button {
+.Dentist-btn {
   border: 3px solid black;
   color: black;
 }
 
-h1,
-h2 {
+.Dentist-btn:focus {
+  outline: 3px solid black;
+}
+
+.Dentist-head {
   font-family: 'Montserrat', sans-serif;
   border: none;
 }
 
-h2 {
+.Dentist-subhead {
   font-weight: normal;
 }
 
 .Dentist {
+  font-family: 'Roboto Mono', Courier, monospace;
+  color: black;
   display: flex;
   justify-content: center;
   align-items: center;

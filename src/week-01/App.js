@@ -27,7 +27,7 @@ function App() {
   return (
     <div className="App">
       <div className="App-container">
-        <h1>Matilda&apos;s Cupcakes</h1>
+        <h1 className="App-head">Matilda&apos;s Cupcakes</h1>
         <div className="App-buttons">
           <button type="button" className={getClass(WEEK)} onClick={() => setUnit(WEEK)}>
             Weekly

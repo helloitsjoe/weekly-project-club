@@ -27,31 +27,47 @@ export const formatCalData = newData => {
   }, {});
 };
 
-export const makeWeeklyCal = ({ startHour = 8, endHour = 17, fillWith = {} } = {}) => {
-  // TODO: Option to include Sat/Sun
+export const range = (start, end) => {
+  const delta = end ? end - start : start;
+  const realStart = end ? start : 0;
+  return [...Array(delta).keys()].map(i => realStart + i);
+};
+
+const makeHalfHourSlots = (startHour, endHour) => {
   if (startHour > endHour) {
     throw new Error('Start time must be before end time!');
   }
 
-  const halfHourSlots = (endHour - startHour) * 2;
+  return range(startHour, endHour).flatMap(time => {
+    const hour = time > 12 ? time - 12 : time;
+    const ampm = time >= 12 ? 'PM' : 'AM';
+    return [
+      { time: `${hour}:00 ${ampm}` },
+      { time: hour !== 2 ? `${hour}:30 ${ampm}` : 'Tooth Hurty' },
+    ];
+  });
+};
+
+export const makeWeeklyCal = ({ startHour = 8, endHour = 17 } = {}) => {
+  const dailySlots = makeHalfHourSlots(startHour, endHour);
 
   return {
-    mon: new Array(halfHourSlots).fill(fillWith),
-    tues: new Array(halfHourSlots).fill(fillWith),
-    wed: new Array(halfHourSlots).fill(fillWith),
-    thurs: new Array(halfHourSlots).fill(fillWith),
-    fri: new Array(halfHourSlots).fill(fillWith),
+    mon: dailySlots.slice(),
+    tues: dailySlots.slice(),
+    wed: dailySlots.slice(),
+    thurs: dailySlots.slice(),
+    fri: dailySlots.slice(),
   };
 };
 
-export const makeRandomWeeklyCal = () => {
+export const makeRandomWeeklyCal = ({ startHour, endHour }) => {
   const getRandomSlotType = () => Math.floor(Math.random() * 4);
   const sparsify = type => (Math.round(Math.random()) ? 0 : type);
 
-  const weeklyCal = makeWeeklyCal({ fillWith: {} });
-  return mapSlots(weeklyCal, () => {
+  const weeklyCal = makeWeeklyCal({ startHour, endHour });
+  return mapSlots(weeklyCal, slot => {
     const type = sparsify(getRandomSlotType());
-    return { text: TYPES[type] || '', type, open: false };
+    return { ...slot, text: TYPES[type] || '', type, open: false };
   });
 };
 
