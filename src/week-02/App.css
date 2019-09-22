@@ -1,21 +1,3 @@
-.Dentist-btn {
-  border: 3px solid black;
-  color: black;
-}
-
-.Dentist-btn:focus {
-  outline: 3px solid black;
-}
-
-.Dentist-head {
-  font-family: 'Montserrat', sans-serif;
-  border: none;
-}
-
-.Dentist-subhead {
-  font-weight: normal;
-}
-
 .Dentist {
   font-family: 'Roboto Mono', Courier, monospace;
   color: black;
@@ -27,7 +9,38 @@
 }
 
 .Dentist-container {
-  width: 60%;
+  display: flex;
+  width: 80%;
+}
+
+.Dentist-buttons {
+  flex-direction: column;
+  flex-basis: 15%;
+}
+
+.Dentist-btn {
+  border: 3px solid black;
+  color: black;
+  width: 80%;
+}
+
+.Dentist-btn:focus {
+  outline: 3px solid black;
+}
+
+.Dentist-table {
+  flex-grow: 4;
+}
+
+.Dentist-head {
+  font-family: 'Montserrat', sans-serif;
+  border: none;
+  margin: 0px;
+}
+
+.Dentist-subhead {
+  font-weight: normal;
+  margin: 0px;
 }
 
 .Table-cell {
@@ -35,11 +48,15 @@
   height: 100%;
   padding: 5px;
   /* min height in case of no text */
-  min-height: 30px;
+  min-height: 31px;
 }
 
 .ReactTable .rt-td {
   padding: 0;
+}
+
+.ReactTable .rt-thead {
+  background-color: darkgray;
 }
 
 .cleaning {
@@ -55,7 +72,9 @@
 }
 
 .unavailable {
-  background-color: gray;
+  background-color: slategray;
+  color: white;
+  /* background-color: lightgray; */
 }
 
 .empty {
@@ -74,4 +93,9 @@
   padding-top: 30px;
   border-radius: 10px;
   background-color: rgba(0, 0, 0, 0.6);
+}
+
+.error {
+  color: red;
+  font-weight: 700;
 }

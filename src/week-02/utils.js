@@ -61,12 +61,13 @@ export const makeWeeklyCal = ({ startHour = 8, endHour = 17 } = {}) => {
 };
 
 export const makeRandomWeeklyCal = ({ startHour, endHour }) => {
-  const getRandomSlotType = () => Math.floor(Math.random() * 4);
-  const sparsify = type => (Math.round(Math.random()) ? 0 : type);
+  // const getRandomSlotType = () => Math.floor(Math.random() * 8);
+  // const sparsify = type => (Math.round(Math.random()) ? 0 : type);
 
   const weeklyCal = makeWeeklyCal({ startHour, endHour });
   return mapSlots(weeklyCal, slot => {
-    const type = sparsify(getRandomSlotType());
+    // const type = sparsify(getRandomSlotType());
+    const type = 0;
     return { ...slot, text: TYPES[type] || '', type, open: false };
   });
 };
