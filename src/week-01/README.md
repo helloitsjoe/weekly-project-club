@@ -1,4 +1,4 @@
-Week 1: Matilda's Cupcakes
+# Week 1: Matilda's Cupcakes
 
 You're working with an accountant named Arthur.
 

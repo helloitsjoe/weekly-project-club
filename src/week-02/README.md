@@ -1,4 +1,4 @@
-Week 2: Martha's Dentapalooza
+# Week 2: Martha's Dentapalooza
 
 This week you’re working with a dentist named Martha.
 
