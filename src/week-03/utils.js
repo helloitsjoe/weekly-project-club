@@ -9,12 +9,12 @@ const bodyParts = [
   'Bun',
   'Elbow',
   'Lip',
-  'Eyeball',
   'Nose',
   'Foot',
   'Jumping',
   'Mouth',
   'Ab',
+  'Ear',
 ];
 
 const exercises = [
@@ -32,33 +32,46 @@ const exercises = [
   'Lasers',
   'Twisters',
   'Crunches',
+  'Whizzers',
 ];
 
 // 2 sec each rep
 // 105 reps = 3:30
 const MAX_REPS = 105;
 // 75 reps = 2:30
-const MIN_REPS = 75;
+const MIN_REPS = 95;
 
 const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 const getReps = (min = 10, max = 20) => Math.floor(Math.random() * (max - min + 1) + min);
+const getNext = arr => {
+  const name = `${pick(bodyParts)} ${pick(exercises)}`;
+  if (arr.includes(name)) {
+    return getNext(arr);
+  }
+  return { name, reps: getReps() };
+};
 export const getTotalReps = arr => arr.reduce((acc, curr) => acc + curr.reps, 0);
+export const format = seconds => {
+  const clamped = seconds < 0 ? 0 : seconds;
+  return clamped >= 10 ? `0:${clamped}` : `0:0${clamped}`;
+};
 
 export const makeExerciseList = () => {
   let totalReps = 0;
   const exercisesWithReps = [];
   while (totalReps < MAX_REPS - 20) {
-    const reps = getReps();
-    exercisesWithReps.push({ name: `${pick(bodyParts)} ${pick(exercises)}`, reps });
-    totalReps += reps;
+    const nextExercise = getNext(exercisesWithReps);
+    exercisesWithReps.push(nextExercise);
+    totalReps += nextExercise.reps;
   }
   return exercisesWithReps;
 };
 
-export const removeBoring = (arr, indexToRemove) => {
-  const nonBoring = arr.filter((ea, i) => i !== indexToRemove);
+export const removeBoring = (arr, nameToRemove) => {
+  const nonBoring = arr.filter(ea => ea.name !== nameToRemove);
   if (getTotalReps(arr) < MIN_REPS) {
-    return nonBoring.concat({ name: `${pick(bodyParts)} ${pick(exercises)}`, reps: getReps() });
+    const nextExercise = getNext(arr);
+    return nonBoring.concat(nextExercise);
   }
   return nonBoring;
 };
