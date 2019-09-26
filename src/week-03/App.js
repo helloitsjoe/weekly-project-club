@@ -20,16 +20,17 @@ function Clock({ currentExercise, secondsLeft, exercises, startNext, remove }) {
         {format(secondsLeft)}
       </div>
       <ol>
-        {exercises.map(ex => (
-          <li key={ex.name}>
-            <span>
-              {ex.name}: {ex.reps} Reps
-            </span>
-            <button onClick={() => remove(ex.name)} className="text" type="button">
-              Boring
-            </button>
-          </li>
-        ))}
+        {exercises &&
+          exercises.map(ex => (
+            <li key={ex.name}>
+              <span>
+                {ex.name}: {ex.reps} Reps
+              </span>
+              <button onClick={() => remove(ex.name)} className="text" type="button">
+                Boring
+              </button>
+            </li>
+          ))}
       </ol>
       <div>Total Reps: {getTotalReps(exercises)}</div>
     </>
