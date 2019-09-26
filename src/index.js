@@ -16,8 +16,7 @@ function App() {
   const [currentWeek, setCurrentWeek] = useState(1);
   const Main = weeks[currentWeek];
   return (
-    <div>
-      <Main />
+    <>
       <select
         className="menu"
         value={currentWeek}
@@ -28,7 +27,8 @@ function App() {
         <option value={1}>Week 2: Martha&apos;s Dentapalooza</option>
         {/* <option value={2}>Week 3: Sweatin&apos; with Seth</option> */}
       </select>
-    </div>
+      <Main />
+    </>
   );
 }
 
