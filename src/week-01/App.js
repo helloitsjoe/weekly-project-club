@@ -25,10 +25,10 @@ function App() {
   const getClass = type => (type === unit ? 'active' : '');
 
   return (
-    <div className="App">
-      <div className="App-container">
-        <h1 className="App-head">Matilda&apos;s Cupcakes</h1>
-        <div className="App-buttons">
+    <div className="Cupcakes">
+      <div className="Cupcakes-container">
+        <h1 className="Cupcakes-head">Matilda&apos;s Cupcakes</h1>
+        <div className="Cupcakes-buttons">
           <button type="button" className={getClass(WEEK)} onClick={() => setUnit(WEEK)}>
             Weekly
           </button>
@@ -42,7 +42,7 @@ function App() {
         <button type="button" className="text" onClick={() => setShowChart(p => !p)}>
           {showChart ? 'See stats' : 'See chart'}
         </button>
-        <div className="App-chart">
+        <div className="Cupcakes-chart">
           {showChart ? <Chart data={data} unit={unit} /> : <Stats data={data} unit={unit} />}
         </div>
       </div>

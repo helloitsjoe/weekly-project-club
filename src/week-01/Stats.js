@@ -21,7 +21,7 @@ function Stats({ data, unit }) {
 
   return (
     <>
-      <div className="App-stats">
+      <div className="Cupcakes-stats">
         <section>
           <h3>{showAvg ? `${label}ly Average` : `Last ${label}`}</h3>
           <StatsBlock num={comparisonFunc(basic)} price={BASIC_PRICE} label="Basic cupcakes" />
@@ -49,12 +49,12 @@ Stats.propTypes = {
 
 function StatsBlock({ num, price, label }) {
   return (
-    <div className="App-stats--block">
+    <div className="Cupcakes-stats--block">
       <p>{label}:</p>
-      <div className="App-stats--container">
+      <div className="Cupcakes-stats--container">
         {price ? (
           <div>
-            <h2>{Math.round(num / price)}</h2> <h4 className="App-stats--revenue">$({num})</h4>
+            <h2>{Math.round(num / price)}</h2> <h4 className="Cupcakes-stats--revenue">$({num})</h4>
           </div>
         ) : (
           <h2>${num}</h2>
