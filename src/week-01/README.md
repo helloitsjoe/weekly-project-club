@@ -1,4 +1,4 @@
-# Week 1: Matilda's Cupcakes
+# Week 1: [Matilda's Cupcakes](https://helloitsjoe.github.io/weekly-project-club/?page=0)
 
 You're working with an accountant named Arthur.
 

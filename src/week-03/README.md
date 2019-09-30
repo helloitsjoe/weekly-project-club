@@ -1,4 +1,4 @@
-# Week 3: Sweatin' with Seth
+# Week 3: [Sweatin' with Seth](https://helloitsjoe.github.io/weekly-project-club/?page=2)
 
 This week you'll be working with Seth, a gym teacher. Seth has to run practice for lots of teams,
 and he's been doing this for a long time. He always does warm-ups with his teams in exactly the same
