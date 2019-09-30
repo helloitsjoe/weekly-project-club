@@ -5,3 +5,5 @@
 [Week 2: Martha's Dentapalooza](https://helloitsjoe.github.io/weekly-project-club?page=1)
 
 [Week 3: Sweatin' with Seth](https://helloitsjoe.github.io/weekly-project-club?page=2)
+
+Project ideas from [weeklyproject.club](https://weeklyproject.club/)

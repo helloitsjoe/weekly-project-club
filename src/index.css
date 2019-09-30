@@ -1,6 +1,18 @@
+body,
+input,
+button {
+  font-family: 'Montserrat', sans-serif;
+}
+
 .menu {
   position: absolute;
   z-index: 9999;
-  top: 10px;
   left: 10px;
+  top: 10px;
+}
+
+.menu a {
+  color: cornflowerblue;
+  margin-top: 5px;
+  display: block;
 }

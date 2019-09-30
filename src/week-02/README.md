@@ -26,3 +26,5 @@ If you want to get fancy, here's how you might take it even further:
 - Show a visual calendar
 - Let Martha update appointments from her phone (text, email, a mobile website, app)
 - Let clients pick their own times online
+
+Project brief from [weeklyproject.club](https://weeklyproject.club/)

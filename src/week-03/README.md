@@ -37,3 +37,5 @@ If you want to go the extra mile, here's some feature ideas:
 - Format things nicely so Seth can print however many out in the morning to have ready.
 - Don't forget to warm up your programming muscles by planning out your week here, and you can
   always call foul and submit a help request here.
+
+Project brief from [weeklyproject.club](https://weeklyproject.club/)

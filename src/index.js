@@ -6,28 +6,33 @@ import SweatySeth from './week-03/App';
 
 import './index.css';
 
-const weeks = [MatildasCupcakes, MarthaDentist, SweatySeth];
+const getReadme = week =>
+  `https://github.com/helloitsjoe/weekly-project-club/blob/master/src/week-${week}/README.md`;
+
+const weeks = [
+  { readme: getReadme('01'), app: MatildasCupcakes },
+  { readme: getReadme('02'), app: MarthaDentist },
+  { readme: getReadme('03'), app: SweatySeth },
+];
 
 // This assumes that the last query param will be the initialIndex
 const q = window ? window.location.search : '';
-const initialIndex = q.substring(q.lastIndexOf('=') + 1) || weeks.length - 1;
+const page = q.substring(q.lastIndexOf('=') + 1) || weeks.length - 1;
 
 function App() {
-  const [currentWeek, setCurrentWeek] = useState(initialIndex);
-  const Main = weeks[currentWeek];
+  const [currentWeek, setCurrentWeek] = useState(page);
+  const Main = weeks[currentWeek].app;
   return (
     <>
       <Main />
-      <select
-        className="menu"
-        value={currentWeek}
-        onChange={e => setCurrentWeek(e.target.value)}
-        name="weeks"
-      >
-        <option value={0}>Week 1: Matilda&apos;s Cupcakes</option>
-        <option value={1}>Week 2: Martha&apos;s Dentapalooza</option>
-        <option value={2}>Week 3: Sweatin&apos; with Seth</option>
-      </select>
+      <div className="menu">
+        <select value={currentWeek} onChange={e => setCurrentWeek(e.target.value)} name="weeks">
+          <option value={0}>Week 1: Matilda&apos;s Cupcakes</option>
+          <option value={1}>Week 2: Martha&apos;s Dentapalooza</option>
+          <option value={2}>Week 3: Sweatin&apos; with Seth</option>
+        </select>
+        <a href={weeks[currentWeek].readme}>Project Brief</a>
+      </div>
     </>
   );
 }

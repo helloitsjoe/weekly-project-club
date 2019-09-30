@@ -41,3 +41,5 @@ answers out, whenever she asks.
 If you want to get fancy, here's how you might take it even further: Break these stats down by item.
 Generate a graph of the data, Matilda loves charts Get creative with the input. Maybe you can think
 of something she'll actually use.
+
+Project brief from [weeklyproject.club](https://weeklyproject.club/)
