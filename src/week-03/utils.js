@@ -41,6 +41,8 @@ const MAX_REPS = 105;
 // 75 reps = 2:30
 const MIN_REPS = 95;
 
+let currentId = 0;
+
 const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 const getReps = (min = 10, max = 20) => Math.floor(Math.random() * (max - min + 1) + min);
 const getNext = arr => {
@@ -48,7 +50,7 @@ const getNext = arr => {
   if (arr.includes(name)) {
     return getNext(arr);
   }
-  return { name, reps: getReps() };
+  return { name, id: currentId++, reps: getReps() };
 };
 export const getTotalReps = arr => arr.reduce((acc, curr) => acc + curr.reps, 0);
 export const format = seconds => {

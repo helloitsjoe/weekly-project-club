@@ -24,6 +24,9 @@
   border: 3px solid black;
   color: black;
   width: 80%;
+  padding: 10px;
+  margin: 5px;
+  font-weight: 700;
 }
 
 .Dentist-btn:focus {

@@ -5,7 +5,7 @@ import { makeExerciseList, getTotalReps, removeBoring, format } from './utils';
 
 const exerciseShape = { name: PropTypes.string, reps: PropTypes.number };
 
-function Clock({ exercises, remove }) {
+export function Clock({ exercises = [], remove }) {
   const [state, dispatch] = useReducer(
     (s, a) => {
       switch (a.type) {
@@ -13,7 +13,17 @@ function Clock({ exercises, remove }) {
           return { ...s, secondsLeft: s.secondsLeft - 1 };
         case 'NEXT': {
           const currentIndex = s.currentIndex + 1;
-          return { ...s, currentIndex, secondsLeft: exercises[currentIndex].reps * 2 };
+          const currentExercise = exercises[currentIndex];
+          if (!currentExercise) {
+            return { buttonLabel: 'Next', exerciseName: 'Done!', seconds: null };
+          }
+          return {
+            ...s,
+            currentIndex,
+            buttonLabel: 'Next',
+            exerciseName: currentExercise.name,
+            secondsLeft: currentExercise.reps * 2,
+          };
         }
         default:
           return s;
@@ -21,56 +31,73 @@ function Clock({ exercises, remove }) {
     },
     {
       currentIndex: -1,
-      secondsLeft: 0,
+      secondsLeft: null,
+      buttonLabel: 'Start',
+      exerciseName: '',
     }
   );
 
-  const { currentIndex, secondsLeft } = state;
+  const { currentIndex, secondsLeft, buttonLabel, exerciseName } = state;
 
   const startNext = () => dispatch({ type: 'NEXT' });
-  const currentExercise = exercises[currentIndex];
 
   useEffect(
     () => {
+      if (currentIndex < 0) return;
+
       const interval = setInterval(() => {
         dispatch({ type: secondsLeft ? 'TICK' : 'NEXT' });
       }, 1000);
-
+      // eslint-disable-next-line consistent-return
       return () => clearInterval(interval);
     },
-    [secondsLeft]
+    [secondsLeft, currentIndex]
   );
 
   return (
     <>
       <div className="Workout-current">
-        <button className="Workout-btn--next" type="button" onClick={startNext}>
-          {!currentExercise ? 'Start' : 'Next'}
+        <button
+          type="button"
+          onClick={startNext}
+          data-testid="action-button"
+          className="Workout-btn--action"
+        >
+          {buttonLabel}
         </button>
-        <h2>{currentExercise ? currentExercise.name : 'Click to start'}</h2>
-        <h2>{format(secondsLeft)}</h2>
+        <h2 data-testid="current-exercise">
+          {currentIndex >= 0 && `${currentIndex + 1}. `}
+          {exerciseName}
+        </h2>
+        <h2 data-testid="time-left">{secondsLeft != null ? format(secondsLeft) : ''}</h2>
       </div>
-      <ol start={currentIndex + 2}>
-        {exercises &&
-          exercises.map(
+      <div className={secondsLeft === 0 ? 'Workout-list--next' : ''}>
+        <ol start={(currentIndex || 0) + 2}>
+          {exercises.map(
             (ex, i) =>
               i > currentIndex && (
-                <li key={ex.name}>
+                <li
+                  key={ex.id}
+                  className={
+                    secondsLeft === 0 && i === currentIndex + 1 ? 'Workout-item--next' : ''
+                  }
+                >
                   <span>
                     {ex.name}: {ex.reps} Reps
                   </span>
                   <button
+                    type="button"
                     onClick={() => remove(ex.name)}
                     className="Workout-btn--text boring"
-                    type="button"
                   >
-                    Boring
+                    Too Boring
                   </button>
                 </li>
               )
           )}
-      </ol>
-      <div>Total Reps: {getTotalReps(exercises)}</div>
+        </ol>
+        <div>Total Reps: {getTotalReps(exercises)}</div>
+      </div>
     </>
   );
 }
@@ -80,60 +107,16 @@ Clock.propTypes = {
   remove: PropTypes.func.isRequired,
 };
 
-function Print({ remove, exercises }) {
-  return (
-    <>
-      <ol>
-        {exercises.map(ex => (
-          <li key={ex.name}>
-            <span>
-              {ex.name}: {ex.reps} Reps
-            </span>
-            <button onClick={remove} className="Workout-btn--text" type="button">
-              Boring
-            </button>
-          </li>
-        ))}
-      </ol>
-      <div>Total Reps: {getTotalReps(exercises)}</div>
-    </>
-  );
-}
-
-Print.propTypes = {
-  exercises: PropTypes.arrayOf(PropTypes.shape(exerciseShape)).isRequired,
-  remove: PropTypes.func.isRequired,
-};
-
 function App() {
-  const [mainComponent, setMainComponent] = useState('clock');
   const [exercises, setExercises] = useState(makeExerciseList());
 
   const remove = name => setExercises(prev => removeBoring(prev, name));
 
-  const Main = mainComponent === 'clock' ? Clock : Print;
-
   return (
     <div className="Workout">
-      <div className="Workout-container">
-        <div className="Workout-links">
-          <button
-            type="button"
-            className="Workout-btn--text"
-            onClick={() => setMainComponent(Print)}
-          >
-            Print Version
-          </button>
-          <button
-            type="button"
-            className="Workout-btn--text"
-            onClick={() => setMainComponent(Clock)}
-          >
-            Do it Live
-          </button>
-        </div>
+      <div>
         <h1 className="Workout-head">Sweatin&apos; with Seth</h1>
-        <Main remove={remove} exercises={exercises} />
+        <Clock remove={remove} exercises={exercises} />
       </div>
     </div>
   );
