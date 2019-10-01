@@ -19,7 +19,7 @@
 
 .Workout-list--next {
   transition: transform 0.5s;
-  transform: translateY(-2.2ch);
+  transform: translateY(-1.3em);
 }
 
 .Workout-item--next {
