@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://helloitsjoe.github.io/weekly-project-club",
   "dependencies": {
+    "common-last-names": "^1.1.3",
     "date-fns": "^2.2.1",
     "gh-pages": "^2.1.1",
     "prop-types": "^15.7.2",
@@ -11,6 +12,7 @@
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.1",
     "react-table": "^6.10.3",
+    "supervillains": "^3.0.0",
     "victory": "^33.0.5"
   },
   "scripts": {

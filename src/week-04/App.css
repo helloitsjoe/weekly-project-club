@@ -1,2 +1,8 @@
-.Honor {
+.Honor-head {
+  margin: auto;
+}
+
+.Honor-table--main {
+  max-width: 50em;
+  margin: auto;
 }

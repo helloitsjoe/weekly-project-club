@@ -1,4 +1,4 @@
-# Week 4: [Honorable Ann-Marie](https://helloitsjoe.github.io/weekly-project-club/?page=3)
+# Week 4: [Ann-Marie's Dishonor Society](https://helloitsjoe.github.io/weekly-project-club/?page=3)
 
 This week you'll be working with Ann-Marie, the president of her local honor society. Her honor
 society meets every week in groups of about 30 people, led by a group leader. The honor society has
