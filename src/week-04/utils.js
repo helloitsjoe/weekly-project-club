@@ -1,6 +1,6 @@
 import supervillains from 'supervillains';
 import lastNames from 'common-last-names';
-import { subWeeks } from 'date-fns';
+import { subWeeks, subYears, isBefore } from 'date-fns';
 
 const groups = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Omega'];
 
@@ -8,15 +8,20 @@ const getFullName = () => `${supervillains.random()} ${lastNames.random()}`;
 
 const getMemberSince = () => {
   const date = new Date();
-  const weeksWithinFourYears = Math.floor(Math.random() * 208);
-  return subWeeks(date, weeksWithinFourYears);
+  const weeksWithinTenYears = Math.floor(Math.random() * 520);
+  return subWeeks(date, weeksWithinTenYears);
 };
 
-const getCommunityHours = () => Math.floor(Math.random() * 200);
+const getCommunityHours = () => Math.floor(Math.random() * 400);
 
 const getIsNominated = () => !!Math.round(Math.random());
 
 const getGroup = () => groups[Math.floor(Math.random() * groups.length)];
+
+export const getIsEligible = ({ memberSince, communityHours, nominated, today = new Date() }) => {
+  const atLeastTwoYears = isBefore(new Date(memberSince), subYears(today, 2));
+  return atLeastTwoYears && communityHours >= 100 && nominated;
+};
 
 export const createPerson = () => {
   return {
@@ -33,5 +38,11 @@ export const createData = (num = 20) =>
     .fill({})
     .map(() => createPerson());
 
-// TODO: normalizeData
+export const getGroups = data =>
+  data.reduce((finalGroups, person) => {
+    const { group } = person;
+    const groupValue = (finalGroups[group] || []).concat(person.name);
+    return { ...finalGroups, [group]: groupValue };
+  }, {});
+
 // TODO: getIsEligible

@@ -1,8 +1,28 @@
+.Honor {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
 .Honor-head {
   margin: auto;
 }
 
-.Honor-table--main {
-  max-width: 50em;
+.Honor-subhead {
   margin: auto;
+}
+
+.Honor-table--main {
+  width: 50em;
+  margin: auto;
+}
+
+.Honor .rt-thead.-header {
+  background-color: darkslategray;
+  color: white;
+  box-shadow: none;
+}
+
+.Honor .rt-td {
+  text-align: center;
 }

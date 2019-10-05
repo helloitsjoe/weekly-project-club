@@ -57,21 +57,21 @@
   min-height: 31px;
 }
 
-.ReactTable .rt-td {
+.Dentist .rt-td {
   padding: 0;
 }
 
-.ReactTable .rt-thead.-header {
+.Dentist .rt-thead.-header {
   background-color: darkgray;
   color: white;
   box-shadow: none;
 }
 
-.ReactTable .rt-table {
+.Dentist .rt-table {
   border: 0;
 }
 
-.rt-th:first-child {
+.Dentist .rt-th:first-child {
   background-color: #eee;
 }
 
