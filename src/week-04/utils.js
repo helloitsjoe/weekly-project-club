@@ -2,7 +2,7 @@ import supervillains from 'supervillains';
 import lastNames from 'common-last-names';
 import { subWeeks, subYears, isBefore } from 'date-fns';
 
-const groups = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Omega'];
+const groups = ['Alpha', 'Beta', 'Omega'];
 
 const getFullName = () => `${supervillains.random()} ${lastNames.random()}`;
 
@@ -18,9 +18,13 @@ const getIsNominated = () => !!Math.round(Math.random());
 
 const getGroup = () => groups[Math.floor(Math.random() * groups.length)];
 
-export const getIsEligible = ({ memberSince, communityHours, nominated, today = new Date() }) => {
-  const atLeastTwoYears = isBefore(new Date(memberSince), subYears(today, 2));
-  return atLeastTwoYears && communityHours >= 100 && nominated;
+export const getEligibleYears = (dateOrString, today = new Date()) =>
+  isBefore(new Date(dateOrString), subYears(today, 2));
+
+export const getEligibleHours = hours => hours > 100;
+
+export const getIsEligible = ({ memberSince, communityHours, nominated }) => {
+  return getEligibleYears(memberSince) && getEligibleHours(communityHours) && nominated;
 };
 
 export const createPerson = () => {
@@ -44,5 +48,3 @@ export const getGroups = data =>
     const groupValue = (finalGroups[group] || []).concat(person.name);
     return { ...finalGroups, [group]: groupValue };
   }, {});
-
-// TODO: getIsEligible

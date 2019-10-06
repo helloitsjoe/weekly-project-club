@@ -9,7 +9,7 @@ describe('Table', () => {
     row            | column | text
     ${'tableHead'} | ${0}   | ${'Name'}
     ${'tableHead'} | ${1}   | ${'Member Since'}
-    ${'tableHead'} | ${2}   | ${'Community Hours'}
+    ${'tableHead'} | ${2}   | ${'Hours'}
     ${'tableHead'} | ${3}   | ${'Nominated'}
     ${'tableHead'} | ${4}   | ${'Group'}
     ${'firstRow'}  | ${0}   | ${'Joe Boyle'}
@@ -20,7 +20,7 @@ describe('Table', () => {
     ${'secondRow'} | ${0}   | ${'Missy Boyle'}
     ${'secondRow'} | ${1}   | ${'10/9/2009'}
     ${'secondRow'} | ${2}   | ${'120'}
-    ${'secondRow'} | ${3}   | ${''}
+    ${'secondRow'} | ${3}   | ${'No'}
     ${'secondRow'} | ${4}   | ${'ALPHA'}
   `('Row $row column $column sez $text', ({ row, column, text }) => {
     const { getByTestId } = render(<Table data={data} />);
@@ -35,8 +35,15 @@ describe('Table', () => {
 });
 
 describe('Voting', () => {
+  it('only displays voting when button is clicked', () => {
+    const { getByText, container } = render(<Voting data={data} />);
+    expect(container.textContent).not.toMatch(/select your group/i);
+    fireEvent.click(getByText(/vote now/i));
+    expect(container.textContent).toMatch(/select your group/i);
+  });
+
   it('displays only eligible members when an option is selected', () => {
-    const { getByText, queryByLabelText } = render(<Voting data={data} />);
+    const { getByText, queryByLabelText } = render(<Voting data={data} initialIsOpen />);
     expect(queryByLabelText(/Joe/)).not.toBeTruthy();
     expect(queryByLabelText(/Missy/)).not.toBeTruthy();
     fireEvent.change(getByText('Select your group').parentElement, { target: { value: 'alpha' } });

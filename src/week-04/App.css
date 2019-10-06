@@ -1,28 +1,94 @@
 .Honor {
+  font-family: 'Playfair Display', serif;
   display: flex;
   justify-content: center;
   flex-direction: column;
+  background-color: black;
+  color: red;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding-top: 2em;
+  width: 100%;
 }
 
 .Honor-head {
   margin: auto;
+  color: red;
 }
 
 .Honor-subhead {
   margin: auto;
+  font-style: italic;
+  font-weight: 400;
+  color: red;
 }
 
-.Honor-table--main {
+.Honor-container {
   width: 50em;
-  margin: auto;
+  margin: 1em auto;
+  padding: 5px;
+  border: 1px solid darkred;
+}
+
+.Honor-button--vote {
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  font-style: italic;
+  color: white;
+  background-color: darkred;
+  font-size: large;
+  margin: 1em auto;
+  border: none;
+  padding: 1em;
+}
+
+.Honor-button--vote:focus {
+  outline: 3px solid darkred;
+}
+
+.Honor-modal {
+  position: absolute;
+  text-align: center;
+  top: calc(50vh - 10em);
+  left: calc(50% - 15em);
+  width: 30em;
+  min-height: 20em;
+  background-color: darkred;
+  z-index: 999;
+}
+
+.Honor-veil {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 998;
+  background-color: rgb(80, 0, 0, 0.5);
 }
 
 .Honor .rt-thead.-header {
-  background-color: darkslategray;
+  background-color: darkred;
   color: white;
   box-shadow: none;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .Honor .rt-td {
+  padding: 0;
   text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  border-bottom: 1px solid darkred;
+}
+
+.Honor .eligible {
+  color: green;
+}
+.Honor .ineligible {
+  color: red;
+}
+
+.Honor ul {
+  list-style-type: none;
 }
