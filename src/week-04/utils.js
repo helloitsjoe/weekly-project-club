@@ -34,6 +34,7 @@ export const createPerson = () => {
     communityHours: getCommunityHours(),
     nominated: getIsNominated(),
     group: getGroup(),
+    exceptional: false,
   };
 };
 

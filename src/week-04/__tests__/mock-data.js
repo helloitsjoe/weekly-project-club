@@ -7,6 +7,7 @@ const data = [
     memberSince: 'October 9, 2010',
     communityHours: 205,
     nominated: true,
+    exceptional: false,
   },
   {
     name: 'Missy Boyle',
@@ -14,6 +15,7 @@ const data = [
     memberSince: 'October 9, 2009',
     communityHours: 120,
     nominated: false,
+    exceptional: false,
   },
   {
     name: 'Rowan Boyle',

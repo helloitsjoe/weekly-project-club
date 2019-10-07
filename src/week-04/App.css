@@ -56,6 +56,9 @@
   min-height: 20em;
   background-color: darkred;
   z-index: 999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .Honor-veil {
@@ -89,6 +92,29 @@
   color: red;
 }
 
+.Honor .exceptional {
+  color: green;
+}
+
+.Honor .submit,
+input {
+  padding: 1em;
+  margin: 0.5em;
+  border: none;
+}
+
+.Honor .member-list {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Montserrat', sans-serif;
+}
+.Honor .member-votes {
+  width: 4em;
+}
+
 .Honor ul {
   list-style-type: none;
+  width: 20em;
+  margin: 1em auto;
 }

@@ -1,5 +1,5 @@
 /* eslint-disable react/forbid-prop-types */
-import React, { useState, useReducer, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
 import './App.css';
@@ -9,7 +9,10 @@ const columns = [
   {
     Header: 'Name',
     accessor: 'name',
-    width: 250,
+    width: 280,
+    Cell: row => (
+      <div className={row.original.exceptional ? 'exceptional' : 'ineligible'}>{row.value}</div>
+    ),
   },
   {
     Header: 'Member Since',
@@ -42,38 +45,12 @@ const columns = [
   },
 ];
 
-export function Table({ data }) {
-  return (
-    <div data-testid="table" className="Honor-container">
-      <ReactTable data={data} columns={columns} showPagination={false} />
-    </div>
-  );
-}
-
-Table.propTypes = {
-  data: PropTypes.array.isRequired,
-};
-
-export function Voting({ data, initialIsOpen, onSubmit }) {
-  const [isOpen, setIsOpen] = useState(initialIsOpen);
+export function Voting({ data, onSubmit, onRequestClose }) {
   const [currentGroup, setCurrentGroup] = useState();
-  const [selected, setSelected] = useState([]);
   const [votes, setVotes] = useState({});
   const [numVoters, setNumVoters] = useState(0);
 
-  useEffect(() => {
-    const closeModal = e => {
-      if (e.key === 'Esc') {
-        setIsOpen(false);
-      }
-    };
-    window.addEventListener('keydown', closeModal);
-    return () => {
-      window.removeEventListener('keydown', closeModal);
-    };
-  }, []);
-
-  const toggleOpen = () => setIsOpen(o => !o);
+  const handleSelect = e => setCurrentGroup(e.target.value);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -83,7 +60,7 @@ export function Voting({ data, initialIsOpen, onSubmit }) {
       }
       return acc;
     }, []);
-    console.log(`newMembers:`, newMembers);
+
     onSubmit(newMembers);
   };
 
@@ -96,71 +73,128 @@ export function Voting({ data, initialIsOpen, onSubmit }) {
     setVotes(p => ({ ...p, [name]: value }));
   };
 
-  const groups = getGroups(data);
   const groupMembers = data.filter(member => member.group === currentGroup);
 
   return (
     <>
-      <button className="Honor-button--vote" type="button" onClick={toggleOpen}>
-        Vote now
-      </button>
-      {isOpen && (
-        // eslint-disable-next-line
-        <>
-          <div className="Honor-modal">
-            <form onSubmit={handleSubmit}>
-              <select value={currentGroup} onChange={e => setCurrentGroup(e.target.value)}>
-                <option>Select your group</option>
-                {Object.keys(groups).map(group => {
-                  return (
-                    <option key={group} name={group}>
-                      {group}
-                    </option>
-                  );
-                })}
-              </select>
-              <input placeholder="Number of voters" type="number" onChange={handleTotalChange} />
-              {groupMembers && (
-                <div>
-                  <ul>
-                    {groupMembers.filter(getIsEligible).map(({ name }) => (
-                      <li key={name}>
-                        <input id={name} onChange={handleVote} name={name} type="number" />
-                        <label htmlFor={name}>{name}</label>
-                      </li>
-                    ))}
-                  </ul>
-                  <button type="submit">Submit</button>
-                </div>
-              )}
-            </form>
-          </div>
-          <div className="Honor-veil" onClick={toggleOpen} />
-        </>
-      )}
+      <div className="Honor-modal">
+        <form onSubmit={handleSubmit}>
+          <select value={currentGroup} onChange={handleSelect}>
+            <option>Select your group</option>
+            {Object.keys(getGroups(data)).map(group => {
+              return (
+                <option key={group} name={group}>
+                  {group}
+                </option>
+              );
+            })}
+          </select>
+          {groupMembers && (
+            <div>
+              <ul>
+                {groupMembers.filter(getIsEligible).map(({ name }) => (
+                  <li key={name} className="member-list">
+                    <label htmlFor={name}>{name}</label>
+                    <input
+                      id={name}
+                      name={name}
+                      onChange={handleVote}
+                      placeholder="Votes"
+                      className="member-votes"
+                      type="number"
+                    />
+                  </li>
+                ))}
+              </ul>
+              <input type="number" placeholder="Number of voters" onChange={handleTotalChange} />
+              <button className="submit" type="submit">
+                Submit
+              </button>
+            </div>
+          )}
+        </form>
+      </div>
+      {/* eslint-disable-next-line */}
+      <div data-testid="veil" className="Honor-veil" onClick={onRequestClose} />
     </>
   );
 }
 
 Voting.propTypes = {
   data: PropTypes.array.isRequired,
+  onSubmit: PropTypes.func,
+  onRequestClose: PropTypes.func,
 };
 
-function App() {
-  const [data, setData] = useState(createData());
+Voting.defaultProps = {
+  onSubmit() {},
+  onRequestClose() {},
+};
 
-  const handleVote = newMembers => {
-    console.log(`members:`, newMembers);
+export function Table({ data }) {
+  return (
+    <div data-testid="table" className="Honor-container">
+      <ReactTable data={data} columns={columns} showPagination={false} />
+    </div>
+  );
+}
+
+Table.propTypes = { data: PropTypes.array.isRequired };
+
+function App({ initialData }) {
+  const [data, setData] = useState(initialData);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const closeModal = e => {
+      if (e.key === 'Escape') {
+        setIsModalOpen(false);
+      }
+    };
+    window.addEventListener('keydown', closeModal);
+    return () => {
+      window.removeEventListener('keydown', closeModal);
+    };
+  }, []);
+
+  const toggleModalOpen = () => setIsModalOpen(o => !o);
+
+  const handleSubmit = newMembers => {
+    setData(d => {
+      return d.map(member => {
+        if (newMembers.includes(member.name)) return { ...member, exceptional: true };
+        return member;
+      });
+    });
+    toggleModalOpen();
   };
 
   return (
     <div className="Honor">
-      <h1 className="Honor-head">Ann-Marie's Dishonor Society</h1>
+      <h1 className="Honor-head">Ann-Marie&apos;s Dishonor Society</h1>
       <h2 className="Honor-subhead">Celebrating 50 Years of Excellence in Supervillainy</h2>
-      <Voting data={data} onSubmit={handleVote} />
+      <button className="Honor-button--vote" type="button" onClick={toggleModalOpen}>
+        Vote now
+      </button>
+      {isModalOpen && (
+        <Voting
+          data={data}
+          isOpen={isModalOpen}
+          onSubmit={handleSubmit}
+          onRequestClose={toggleModalOpen}
+        />
+      )}
       <Table data={data} />
     </div>
   );
 }
+
+App.propTypes = {
+  initialData: PropTypes.array,
+};
+
+App.defaultProps = {
+  initialData: createData(),
+};
 
 export default App;
