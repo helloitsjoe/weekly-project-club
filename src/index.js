@@ -32,7 +32,7 @@ function App() {
           <option value={0}>Week 1: Matilda&apos;s Cupcakes</option>
           <option value={1}>Week 2: Martha&apos;s Dentapalooza</option>
           <option value={2}>Week 3: Sweatin&apos; with Seth</option>
-          <option value={3}>Week 4: Honorable Ann-Marie</option>
+          <option value={3}>Week 4: Ann-Marie&apos;s Dishonor Society</option>
         </select>
         <a href={weeks[currentWeek].readme}>Project Brief</a>
       </div>

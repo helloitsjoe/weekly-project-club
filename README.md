@@ -6,4 +6,6 @@
 
 [Week 3: Sweatin' with Seth](https://helloitsjoe.github.io/weekly-project-club?page=2)
 
+[Week 4: Ann-Marie's Dishonor Society](https://helloitsjoe.github.io/weekly-project-club?page=3)
+
 Project ideas from [weeklyproject.club](https://weeklyproject.club/)
