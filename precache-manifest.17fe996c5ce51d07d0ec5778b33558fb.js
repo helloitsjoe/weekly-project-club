@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "2f80fdcbcd0096aa9d0e58e7a1f3d0f0",
+    "revision": "ff1614d925492d99936eb985b24d55b6",
     "url": "/weekly-project-club/index.html"
   },
   {
@@ -8,16 +8,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/weekly-project-club/static/css/2.11f871ab.chunk.css"
   },
   {
-    "revision": "9ecf6d48a1ce28104efb",
-    "url": "/weekly-project-club/static/css/main.456e7f07.chunk.css"
+    "revision": "4d5842211695d5473b3e",
+    "url": "/weekly-project-club/static/css/main.6078cf27.chunk.css"
   },
   {
     "revision": "454037d90d906b908064",
     "url": "/weekly-project-club/static/js/2.9ffecf14.chunk.js"
   },
   {
-    "revision": "9ecf6d48a1ce28104efb",
-    "url": "/weekly-project-club/static/js/main.b76deb37.chunk.js"
+    "revision": "4d5842211695d5473b3e",
+    "url": "/weekly-project-club/static/js/main.d43ea86a.chunk.js"
   },
   {
     "revision": "77d509952a4261deaa2d",
