@@ -134,7 +134,14 @@ Voting.defaultProps = {
 export function Table({ data }) {
   return (
     <div data-testid="table" className="Honor-container">
-      <ReactTable data={data} columns={columns} showPagination={false} />
+      <ReactTable
+        getTheadThProps={(state, row, column) => {
+          return { 'data-testid': 'header' };
+        }}
+        data={data}
+        columns={columns}
+        showPagination={false}
+      />
     </div>
   );
 }
